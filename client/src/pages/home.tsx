@@ -7,28 +7,32 @@ import CrudOperations from "@/components/crud-operations";
 import InfoModal from "@/components/info-modal";
 import LocationMap from "@/components/location-map";
 import LocationVideos from "@/components/location-videos";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
   const [currentWeather, setCurrentWeather] = useState<any>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
 
   return (
-    <div className="bg-weather-surface min-h-screen">
+    <div className="bg-weather-surface dark:bg-gray-900 min-h-screen">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <i className="fas fa-cloud-sun text-weather-blue text-2xl"></i>
-              <h1 className="text-xl font-semibold text-gray-900">Weather App</h1>
+              <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Weather App</h1>
             </div>
-            <button 
-              onClick={() => setShowInfoModal(true)}
-              className="flex items-center space-x-2 bg-weather-blue text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              <i className="fas fa-info-circle"></i>
-              <span>About</span>
-            </button>
+            <div className="flex items-center space-x-3">
+              <ThemeToggle />
+              <button 
+                onClick={() => setShowInfoModal(true)}
+                className="flex items-center space-x-2 bg-weather-blue text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                <i className="fas fa-info-circle"></i>
+                <span>About</span>
+              </button>
+            </div>
           </div>
         </div>
       </header>

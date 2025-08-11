@@ -28,15 +28,30 @@ export default function LocationVideos({ location }: LocationVideosProps) {
     setError("");
     
     try {
+      // First try location-specific videos
       const response = await fetch(`/api/videos/${encodeURIComponent(location)}`);
       if (!response.ok) {
         throw new Error("Failed to fetch videos");
       }
       
       const data = await response.json();
-      setVideos(data.videos || []);
+      
+      // If no location videos found, try random travel videos
+      if (!data.videos || data.videos.length === 0) {
+        const randomResponse = await fetch(`/api/videos/random-travel`);
+        if (randomResponse.ok) {
+          const randomData = await randomResponse.json();
+          setVideos(randomData.videos || []);
+          setError(`No videos found for ${location}. Showing popular travel videos instead.`);
+        } else {
+          setVideos([]);
+          setError(`No videos available for ${location}`);
+        }
+      } else {
+        setVideos(data.videos);
+      }
     } catch (err) {
-      setError("Unable to load videos for this location");
+      setError(`Unable to load videos for ${location}`);
       console.error("Video fetch error:", err);
     } finally {
       setLoading(false);
@@ -46,12 +61,12 @@ export default function LocationVideos({ location }: LocationVideosProps) {
   if (!location) return null;
 
   return (
-    <div className="bg-gradient-to-br from-red-50 to-pink-100 rounded-xl shadow-lg border-0 p-6">
+    <div className="bg-gradient-to-br from-red-50 to-pink-100 dark:from-red-900/20 dark:to-pink-900/20 rounded-xl shadow-lg border-0 p-6">
       <div className="flex items-center space-x-3 mb-6">
-        <div className="p-2 bg-white rounded-full shadow-sm">
+        <div className="p-2 bg-white dark:bg-gray-800 rounded-full shadow-sm">
           <i className="fab fa-youtube text-red-600 text-xl"></i>
         </div>
-        <h3 className="text-xl font-bold text-gray-900">Videos about {location}</h3>
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white">Videos about {location}</h3>
       </div>
 
       {loading && (
@@ -62,10 +77,10 @@ export default function LocationVideos({ location }: LocationVideosProps) {
       )}
 
       {error && (
-        <div className="bg-red-100 border border-red-300 rounded-lg p-4 mb-4">
+        <div className="bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg p-4 mb-4">
           <div className="flex items-center">
-            <i className="fas fa-exclamation-triangle text-red-600 mr-2"></i>
-            <span className="text-red-800">{error}</span>
+            <i className="fas fa-info-circle text-yellow-600 dark:text-yellow-400 mr-2"></i>
+            <span className="text-yellow-800 dark:text-yellow-300">{error}</span>
           </div>
         </div>
       )}
@@ -73,7 +88,7 @@ export default function LocationVideos({ location }: LocationVideosProps) {
       {videos.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {videos.slice(0, 4).map((video) => (
-            <div key={video.id} className="bg-white bg-opacity-70 rounded-xl p-4 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200">
+            <div key={video.id} className="bg-white dark:bg-gray-800 bg-opacity-70 dark:bg-opacity-70 rounded-xl p-4 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200">
               <div className="relative mb-3">
                 <img 
                   src={video.thumbnail} 
@@ -90,10 +105,10 @@ export default function LocationVideos({ location }: LocationVideosProps) {
                   </Button>
                 </div>
               </div>
-              <h4 className="font-medium text-gray-900 text-sm line-clamp-2 mb-2">
+              <h4 className="font-medium text-gray-900 dark:text-white text-sm line-clamp-2 mb-2">
                 {video.title}
               </h4>
-              <p className="text-xs text-gray-600">{video.channelTitle}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">{video.channelTitle}</p>
             </div>
           ))}
         </div>
@@ -102,7 +117,7 @@ export default function LocationVideos({ location }: LocationVideosProps) {
       {videos.length === 0 && !loading && !error && (
         <div className="text-center py-8">
           <div className="text-6xl mb-4">🎥</div>
-          <p className="text-gray-600">No videos found for this location</p>
+          <p className="text-gray-600 dark:text-gray-400">No videos found for this location</p>
         </div>
       )}
     </div>

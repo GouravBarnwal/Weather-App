@@ -280,6 +280,53 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // GET /api/videos/random-travel - Get random travel videos as fallback
+  app.get("/api/videos/random-travel", async (req, res) => {
+    try {
+      if (!YOUTUBE_API_KEY) {
+        return res.status(503).json({ 
+          error: "YouTube API key not configured",
+          videos: [] 
+        });
+      }
+
+      const randomSearchTerms = [
+        "travel destinations 2024",
+        "best places to visit",
+        "beautiful travel destinations",
+        "amazing travel spots",
+        "world tourism",
+        "travel guide popular destinations"
+      ];
+      
+      const randomQuery = randomSearchTerms[Math.floor(Math.random() * randomSearchTerms.length)];
+      const youtubeUrl = `${YOUTUBE_BASE_URL}/search?part=snippet&q=${encodeURIComponent(randomQuery)}&type=video&maxResults=6&key=${YOUTUBE_API_KEY}&safeSearch=strict&videoDefinition=high`;
+
+      const response = await fetch(youtubeUrl);
+      
+      if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      const videos = data.items?.map((item: any) => ({
+        id: item.id.videoId,
+        title: item.snippet.title,
+        thumbnail: item.snippet.thumbnails.medium.url,
+        channelTitle: item.snippet.channelTitle,
+      })) || [];
+
+      res.json({ videos });
+    } catch (error) {
+      console.error("YouTube API error:", error);
+      res.status(500).json({ 
+        error: "Failed to fetch videos",
+        videos: [] 
+      });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
