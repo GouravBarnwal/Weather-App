@@ -2,7 +2,7 @@
 
 ## Overview
 
-A professional full-stack weather application built for the PM Accelerator technical assessment. The application allows users to search for weather information by location (city, zip code, coordinates, or landmarks), displays current weather conditions with a 5-day forecast, and maintains a searchable history of weather queries. The application features real-time weather data from OpenWeatherMap API, geolocation support for automatic location detection, and comprehensive CRUD operations for weather data management using MongoDB for persistent storage.
+A professional full-stack weather application that allows users to search for weather information by location (city, zip code, coordinates, or landmarks), displays current weather conditions with a 5-day forecast, and maintains a searchable history of weather queries. The application features real-time weather data from OpenWeatherMap API, geolocation support for automatic location detection, and comprehensive CRUD operations for weather data management using MongoDB for persistent storage.
 
 ## User Preferences
 

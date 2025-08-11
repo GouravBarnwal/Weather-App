@@ -97,10 +97,10 @@ The app will automatically:
 - Location validation supports various input formats
 - Responsive design works on desktop and mobile
 
-## Built By
+## About
 
-Gourav Barnwal for PM Accelerator Technical Assessment
+Built by Gourav Barnwal
 
 ---
 
-*Professional weather application demonstrating full-stack development skills with React, Express, MongoDB, and external API integration.*
+*A modern weather application with React, Express, MongoDB, and OpenWeatherMap API.*
