@@ -1,0 +1,65 @@
+Build a full-stack weather application that meets the following requirements:
+
+### Overview
+- The app lets users enter a location (city name, zip code, GPS coordinates, or landmark) and fetch real-time weather data from the OpenWeatherMap API.
+- Show current weather, temperature, humidity, wind speed, and weather description.
+- Include a 5-day forecast.
+- Include icons/images for different weather conditions.
+- Detect and use the user's current location automatically via browser geolocation.
+
+### Frontend
+- Framework: React.js
+- Features:
+  1. Search bar to input location.
+  2. Button to use current location (via `navigator.geolocation`).
+  3. Display current weather details and 5-day forecast in a clean layout.
+  4. Weather icons based on conditions (e.g., sunny, rainy, cloudy).
+  5. A history page to display previously searched weather data from the database.
+  6. An info button showing my name and a link to PM Accelerator's LinkedIn page.
+
+### Backend
+- Runtime: Node.js + Express
+- Database: MongoDB (NoSQL) with Mongoose
+- API Endpoints:
+  1. **GET /weather/:location** → Fetch real-time weather and store it in MongoDB.
+  2. **POST /weather** → Create a new weather record (location + date range + temperature + forecast).
+  3. **GET /history** → Retrieve all stored weather records.
+  4. **PUT /weather/:id** → Update an existing weather record (validate date ranges and location).
+  5. **DELETE /weather/:id** → Delete a weather record.
+
+### Data Validation
+- Validate location before querying API.
+- Validate date ranges (start date ≤ end date).
+- If location is misspelled, try fuzzy matching or suggest similar locations.
+
+### Database Schema
+- `location` (string)
+- `date` (Date)
+- `temperature` (Number)
+- `forecast` (Array of objects: date, temp, condition)
+- `humidity` (Number)
+- `windSpeed` (Number)
+- `description` (String)
+
+### Optional Features (Include if possible)
+1. Use YouTube Data API to show travel/weather videos for that location.
+2. Embed Google Maps showing the location.
+3. Allow exporting stored weather history to JSON and CSV.
+
+### Deployment
+- Include a `README.md` with clear setup instructions.
+- Include a `requirements.txt` or `package.json` with dependencies.
+- Make it work with a `.env` file for storing API keys securely.
+
+### Delivery
+- Structure the project with a `client` folder for React and a `server` folder for Node.js.
+- Ensure CORS is enabled for frontend-backend communication.
+- Return real-time data, not static placeholders.
+
+### Testing
+- Include basic error handling for:
+  - Invalid location.
+  - API errors (e.g., rate limit reached).
+  - Database connection errors.
+
+Code this project so I can run it locally after cloning, installing dependencies, and running `npm start` for both frontend and backend.
