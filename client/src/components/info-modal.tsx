@@ -34,7 +34,7 @@ export default function InfoModal({ isOpen, onClose }: InfoModalProps) {
           
           <div className="pt-4 border-t border-gray-200">
             <a 
-              href="https://www.linkedin.com/company/product-manager-accelerator" 
+              href="https://www.linkedin.com/school/pmaccelerator/" 
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center space-x-2 text-weather-blue hover:text-blue-600 font-medium"
