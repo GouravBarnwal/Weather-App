@@ -286,11 +286,19 @@ class SmartStorage implements IStorage {
   private async getStorage(): Promise<IStorage> {
     if (this.useMemory) return this.memStorage;
     
+    // In cloud environments like Replit, use memory storage by default
+    // When running locally, users can set MONGODB_URI to connect to local MongoDB
+    if (!process.env.MONGODB_URI) {
+      console.log('Using in-memory storage for development (set MONGODB_URI environment variable to use MongoDB)');
+      this.useMemory = true;
+      return this.memStorage;
+    }
+    
     try {
       await this.mongoStorage.connect();
       return this.mongoStorage;
     } catch (error) {
-      console.log('MongoDB not available, using in-memory storage for development');
+      console.log('MongoDB connection failed, falling back to in-memory storage');
       this.useMemory = true;
       return this.memStorage;
     }
