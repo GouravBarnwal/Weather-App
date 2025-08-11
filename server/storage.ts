@@ -48,13 +48,37 @@ export class MongoStorage implements IStorage {
     if (this.isConnected) return;
     
     try {
-      const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/weather_app';
-      console.log('Attempting to connect to MongoDB at:', mongoUri);
+      // Try multiple common MongoDB connection strings for Windows
+      const possibleUris = [
+        process.env.MONGODB_URI,
+        'mongodb://localhost:27017/weather_app',
+        'mongodb://127.0.0.1:27017/weather_app',
+        'mongodb://localhost:27018/weather_app', // Sometimes runs on different port
+        'mongodb://127.0.0.1:27018/weather_app'
+      ].filter(Boolean);
       
-      await mongoose.connect(mongoUri, {
-        serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-        connectTimeoutMS: 10000,
-      });
+      let connected = false;
+      let lastError;
+      
+      for (const uri of possibleUris) {
+        try {
+          console.log('Attempting to connect to MongoDB at:', uri);
+          await mongoose.connect(uri, {
+            serverSelectionTimeoutMS: 3000,
+            connectTimeoutMS: 5000,
+          });
+          connected = true;
+          console.log('Successfully connected to MongoDB at:', uri);
+          break;
+        } catch (error) {
+          lastError = error;
+          console.log('Failed to connect to:', uri);
+        }
+      }
+      
+      if (!connected) {
+        throw lastError;
+      }
       
       this.isConnected = true;
       console.log('Connected to MongoDB successfully');
