@@ -25,7 +25,7 @@ export default function InfoModal({ isOpen, onClose }: InfoModalProps) {
             <p className="font-medium text-gray-900 mb-2">Services we offer:</p>
             <ul className="space-y-1 text-xs">
               <li>🚀 <strong>PMA Pro:</strong> End-to-end product manager job hunting program</li>
-              <li>🚀 <strong>AI PM Bootcamp:</strong> Hands-on AI Product Management skills</li>
+              <li>🚀 <strong>Digital PM Bootcamp:</strong> Hands-on Digital Product Management skills</li>
               <li>🚀 <strong>PMA Power Skills:</strong> Leadership and presentation skills</li>
               <li>🚀 <strong>PMA Leader:</strong> Executive level advancement</li>
               <li>🚀 <strong>1:1 Resume Review:</strong> Killer product manager resume rewriting</li>
