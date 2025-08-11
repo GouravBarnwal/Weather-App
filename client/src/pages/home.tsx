@@ -54,6 +54,24 @@ export default function Home() {
 
       </div>
 
+      {/* Footer */}
+      <footer className="bg-white border-t border-gray-200 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="text-center text-sm text-gray-600">
+            <p>Created by Gourav Barnwal for PM Accelerator</p>
+            <a 
+              href="https://www.linkedin.com/in/grv1404" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center space-x-1 text-weather-blue hover:text-blue-600 font-medium mt-2"
+            >
+              <i className="fab fa-linkedin"></i>
+              <span>linkedin.com/in/grv1404</span>
+            </a>
+          </div>
+        </div>
+      </footer>
+
       {/* Info Modal */}
       <InfoModal 
         isOpen={showInfoModal} 
