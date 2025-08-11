@@ -1,4 +1,4 @@
-# Weather Pro Application
+# Weather App
 
 A professional full-stack weather application built with React, Express.js, and MongoDB. Features real-time weather data, 5-day forecasts, search history, and complete CRUD operations.
 

@@ -1,4 +1,4 @@
-# Weather Pro Application
+# Weather App
 
 ## Overview
 

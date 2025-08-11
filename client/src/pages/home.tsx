@@ -18,7 +18,7 @@ export default function Home() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
               <i className="fas fa-cloud-sun text-weather-blue text-2xl"></i>
-              <h1 className="text-xl font-semibold text-gray-900">Weather Pro</h1>
+              <h1 className="text-xl font-semibold text-gray-900">Weather App</h1>
             </div>
             <button 
               onClick={() => setShowInfoModal(true)}
