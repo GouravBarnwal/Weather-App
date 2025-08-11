@@ -6,6 +6,7 @@ import WeatherHistory from "@/components/weather-history";
 import CrudOperations from "@/components/crud-operations";
 import InfoModal from "@/components/info-modal";
 import LocationMap from "@/components/location-map";
+import LocationVideos from "@/components/location-videos";
 
 export default function Home() {
   const [currentWeather, setCurrentWeather] = useState<any>(null);
@@ -47,6 +48,11 @@ export default function Home() {
               <LocationMap 
                 latitude={currentWeather.latitude}
                 longitude={currentWeather.longitude}
+                location={currentWeather.location}
+              />
+            )}
+            {currentWeather && (
+              <LocationVideos 
                 location={currentWeather.location}
               />
             )}

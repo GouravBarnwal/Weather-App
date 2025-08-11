@@ -8,6 +8,10 @@ import { z } from "zod";
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || process.env.VITE_OPENWEATHER_API_KEY || "";
 const OPENWEATHER_BASE_URL = "https://api.openweathermap.org/data/2.5";
 
+// YouTube API integration
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || "";
+const YOUTUBE_BASE_URL = "https://www.googleapis.com/youtube/v3";
+
 interface WeatherApiResponse {
   main: {
     temp: number;
@@ -233,6 +237,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Export CSV error:", error);
       res.status(500).json({ error: "Failed to export data" });
+    }
+  });
+
+  // GET /api/videos/:location - Get YouTube videos for location
+  app.get("/api/videos/:location", async (req, res) => {
+    try {
+      const { location } = req.params;
+      
+      if (!YOUTUBE_API_KEY) {
+        return res.status(503).json({ 
+          error: "YouTube API key not configured",
+          videos: [] 
+        });
+      }
+
+      const searchQuery = `${location} travel guide tourism attractions`;
+      const youtubeUrl = `${YOUTUBE_BASE_URL}/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&maxResults=6&key=${YOUTUBE_API_KEY}&safeSearch=strict&videoDefinition=high`;
+
+      const response = await fetch(youtubeUrl);
+      
+      if (!response.ok) {
+        throw new Error(`YouTube API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      const videos = data.items?.map((item: any) => ({
+        id: item.id.videoId,
+        title: item.snippet.title,
+        thumbnail: item.snippet.thumbnails.medium.url,
+        channelTitle: item.snippet.channelTitle,
+      })) || [];
+
+      res.json({ videos });
+    } catch (error) {
+      console.error("YouTube API error:", error);
+      res.status(500).json({ 
+        error: "Failed to fetch videos",
+        videos: [] 
+      });
     }
   });
 
