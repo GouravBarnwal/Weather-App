@@ -1,8 +1,8 @@
-# Weather Application
+# Weather Pro Application
 
 ## Overview
 
-A full-stack weather application built for the PM Accelerator technical assessment. The application allows users to search for weather information by location (city, zip code, coordinates, or landmarks), displays current weather conditions with a 5-day forecast, and maintains a searchable history of weather queries. The application features real-time weather data from OpenWeatherMap API, geolocation support for automatic location detection, and comprehensive CRUD operations for weather data management.
+A professional full-stack weather application built for the PM Accelerator technical assessment. The application allows users to search for weather information by location (city, zip code, coordinates, or landmarks), displays current weather conditions with a 5-day forecast, and maintains a searchable history of weather queries. The application features real-time weather data from OpenWeatherMap API, geolocation support for automatic location detection, and comprehensive CRUD operations for weather data management using MongoDB for persistent storage.
 
 ## User Preferences
 
@@ -27,13 +27,13 @@ Preferred communication style: Simple, everyday language.
 - **Error Handling**: Centralized error handling middleware with proper HTTP status codes
 
 ### Data Storage Solutions
-- **Primary Database**: PostgreSQL via Neon Database for weather records and user data
+- **Primary Database**: MongoDB with Mongoose ODM for weather records and user data
 - **Schema Design**: 
-  - Weather records table with location, coordinates, temperature, humidity, wind speed, visibility, forecast data
-  - User authentication table (prepared for future use)
-  - JSON storage for forecast arrays with structured date-based weather predictions
-- **Database Migrations**: Drizzle Kit for schema migrations and database management
-- **Development Storage**: In-memory storage fallback for development environments
+  - Weather records collection with location, coordinates, temperature, humidity, wind speed, visibility, forecast data
+  - User authentication collection (prepared for future use)
+  - Mixed type storage for forecast arrays with structured date-based weather predictions
+- **Database Management**: Mongoose ODM for schema definition and data validation
+- **Connection Management**: Automatic MongoDB connection with local fallback support
 
 ### Authentication and Authorization
 - **Current State**: Basic user schema prepared but not actively implemented
