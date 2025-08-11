@@ -247,4 +247,64 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MongoStorage();
+// Smart storage that tries MongoDB first, falls back to memory storage
+class SmartStorage implements IStorage {
+  private mongoStorage = new MongoStorage();
+  private memStorage = new MemStorage();
+  private useMemory = false;
+
+  private async getStorage(): Promise<IStorage> {
+    if (this.useMemory) return this.memStorage;
+    
+    try {
+      await this.mongoStorage.connect();
+      return this.mongoStorage;
+    } catch (error) {
+      console.log('MongoDB not available, using in-memory storage for development');
+      this.useMemory = true;
+      return this.memStorage;
+    }
+  }
+
+  async getUser(id: string): Promise<User | undefined> {
+    const storage = await this.getStorage();
+    return storage.getUser(id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const storage = await this.getStorage();
+    return storage.getUserByUsername(username);
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const storage = await this.getStorage();
+    return storage.createUser(user);
+  }
+
+  async createWeatherRecord(record: InsertWeatherRecord): Promise<WeatherRecord> {
+    const storage = await this.getStorage();
+    return storage.createWeatherRecord(record);
+  }
+
+  async getAllWeatherRecords(): Promise<WeatherRecord[]> {
+    const storage = await this.getStorage();
+    return storage.getAllWeatherRecords();
+  }
+
+  async getWeatherRecord(id: string): Promise<WeatherRecord | undefined> {
+    const storage = await this.getStorage();
+    return storage.getWeatherRecord(id);
+  }
+
+  async updateWeatherRecord(id: string, updates: UpdateWeatherRecord): Promise<WeatherRecord | undefined> {
+    const storage = await this.getStorage();
+    return storage.updateWeatherRecord(id, updates);
+  }
+
+  async deleteWeatherRecord(id: string): Promise<boolean> {
+    const storage = await this.getStorage();
+    return storage.deleteWeatherRecord(id);
+  }
+}
+
+export const storage = new SmartStorage();
