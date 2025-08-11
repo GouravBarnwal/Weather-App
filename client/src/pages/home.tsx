@@ -5,6 +5,7 @@ import Forecast from "@/components/forecast";
 import WeatherHistory from "@/components/weather-history";
 import CrudOperations from "@/components/crud-operations";
 import InfoModal from "@/components/info-modal";
+import LocationMap from "@/components/location-map";
 
 export default function Home() {
   const [currentWeather, setCurrentWeather] = useState<any>(null);
@@ -42,6 +43,13 @@ export default function Home() {
           <div className="lg:col-span-2 space-y-8">
             <CurrentWeather weatherData={currentWeather} />
             <Forecast weatherData={currentWeather} />
+            {currentWeather && (
+              <LocationMap 
+                latitude={currentWeather.latitude}
+                longitude={currentWeather.longitude}
+                location={currentWeather.location}
+              />
+            )}
           </div>
 
           {/* Right Column: History & CRUD Operations */}
