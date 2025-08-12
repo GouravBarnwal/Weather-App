@@ -8,12 +8,12 @@ interface InfoModalProps {
 export default function InfoModal({ isOpen, onClose }: InfoModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md w-full max-h-96 overflow-y-auto">
+      <DialogContent className="max-w-md w-full max-h-96 overflow-y-auto bg-white dark:bg-gray-900 border-0 shadow-xl">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold text-gray-900">About This App</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4 text-sm text-gray-600">
+        <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300">
           <p><strong>Developer:</strong> Gourav Barnwal</p>
           
           <div>

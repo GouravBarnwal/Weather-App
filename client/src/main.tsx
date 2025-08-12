@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="light" storageKey="weather-ui-theme">
+    <ThemeProvider defaultTheme="dark" storageKey="weather-ui-theme">
       <App />
     </ThemeProvider>
   </QueryClientProvider>

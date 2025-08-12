@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type WeatherRecord, type InsertWeatherRecord, type UpdateWeatherRecord } from "@shared/schema";
+import { type User, type InsertUser, type WeatherRecord, type InsertWeatherRecord, type UpdateWeatherRecord } from "./schema";
 import { randomUUID } from "crypto";
 import mongoose from "mongoose";
 
@@ -62,17 +62,34 @@ export class MongoStorage implements IStorage {
       
       for (const uri of possibleUris) {
         try {
-          console.log('Attempting to connect to MongoDB at:', uri);
-          await mongoose.connect(uri, {
-            serverSelectionTimeoutMS: 3000,
-            connectTimeoutMS: 5000,
+          console.log('\n=== MongoDB Connection Attempt ===');
+          console.log('Attempting to connect to MongoDB at:', uri.replace(/:[^:]*@/, ':***@')); // Hide password in logs
+          
+          const connection = await mongoose.connect(uri, {
+            serverSelectionTimeoutMS: 5000,
+            connectTimeoutMS: 10000,
+            socketTimeoutMS: 45000,
           });
+          
           connected = true;
-          console.log('Successfully connected to MongoDB at:', uri);
+          console.log('✅ Successfully connected to MongoDB!');
+          console.log('MongoDB connection state:', mongoose.connection.readyState);
+          console.log('Database name:', connection.connection.db.databaseName);
+          console.log('Collections:', await connection.connection.db.listCollections().toArray());
           break;
         } catch (error) {
           lastError = error;
-          console.log('Failed to connect to:', uri);
+          console.error('❌ Failed to connect to MongoDB:');
+          console.error('Error name:', error.name);
+          console.error('Error message:', error.message);
+          if (error.code === 'MONGODB_DUPLICATE_KEY') {
+            console.error('Duplicate key error - a document with this ID already exists');
+          } else if (error.code === 'MONGODB_SERVER_SELECTION_ERROR') {
+            console.error('Server selection error - check your network connection and MongoDB Atlas whitelist');
+          } else if (error.code === 'MONGODB_AUTH_ERROR') {
+            console.error('Authentication failed - check your username and password');
+          }
+          console.log('Trying next connection string...');
         }
       }
       

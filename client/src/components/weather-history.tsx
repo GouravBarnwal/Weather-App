@@ -32,34 +32,6 @@ export default function WeatherHistory() {
     },
   });
 
-  const handleExport = async () => {
-    try {
-      const response = await fetch("/api/weather/export/csv");
-      if (!response.ok) throw new Error("Export failed");
-      
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'weather-data.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-      
-      toast({
-        title: "Data exported successfully",
-        description: "Weather data has been downloaded as CSV",
-      });
-    } catch (error) {
-      toast({
-        title: "Export failed",
-        description: "Unable to export data",
-        variant: "destructive",
-      });
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -73,17 +45,8 @@ export default function WeatherHistory() {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Search History</h3>
-        <Button 
-          onClick={handleExport}
-          variant="ghost"
-          size="sm"
-          className="text-weather-blue hover:text-blue-600 text-sm font-medium"
-          disabled={records.length === 0}
-        >
-          <i className="fas fa-download mr-1"></i>Export
-        </Button>
       </div>
       
       <div className="space-y-3">
@@ -130,7 +93,7 @@ export default function WeatherHistory() {
       
       {records.length > 5 && (
         <p className="text-center text-sm text-gray-500 mt-4">
-          Showing latest 5 records. Export to see all data.
+          Showing latest 5 records
         </p>
       )}
     </div>
