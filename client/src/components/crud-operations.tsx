@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import type { WeatherRecord } from "@shared/schema";
+import type { WeatherRecord } from "@shared/schema-simple";
 // Custom styles for react-datepicker to fix z-index and positioning
 import "react-datepicker/dist/react-datepicker.css";
 import "./date-picker-fix.css";

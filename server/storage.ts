@@ -63,9 +63,10 @@ export class MongoStorage implements IStorage {
       for (const uri of possibleUris) {
         try {
           console.log('\n=== MongoDB Connection Attempt ===');
-          console.log('Attempting to connect to MongoDB at:', uri.replace(/:[^:]*@/, ':***@')); // Hide password in logs
+          const safeUri = (uri as string).replace(/:[^:]*@/, ':***@');
+          console.log('Attempting to connect to MongoDB at:', safeUri); // Hide password in logs
           
-          const connection = await mongoose.connect(uri, {
+          const connection = await mongoose.connect(uri as string, {
             serverSelectionTimeoutMS: 5000,
             connectTimeoutMS: 10000,
             socketTimeoutMS: 45000,
@@ -74,19 +75,20 @@ export class MongoStorage implements IStorage {
           connected = true;
           console.log('✅ Successfully connected to MongoDB!');
           console.log('MongoDB connection state:', mongoose.connection.readyState);
-          console.log('Database name:', connection.connection.db.databaseName);
-          console.log('Collections:', await connection.connection.db.listCollections().toArray());
+          console.log('Database name:', connection.connection.db?.databaseName);
+          console.log('Collections:', await connection.connection.db?.listCollections().toArray());
           break;
         } catch (error) {
           lastError = error;
           console.error('❌ Failed to connect to MongoDB:');
-          console.error('Error name:', error.name);
-          console.error('Error message:', error.message);
-          if (error.code === 'MONGODB_DUPLICATE_KEY') {
+          const err = error as any;
+          console.error('Error name:', err?.name);
+          console.error('Error message:', err?.message);
+          if (err?.code === 'MONGODB_DUPLICATE_KEY') {
             console.error('Duplicate key error - a document with this ID already exists');
-          } else if (error.code === 'MONGODB_SERVER_SELECTION_ERROR') {
+          } else if (err?.code === 'MONGODB_SERVER_SELECTION_ERROR') {
             console.error('Server selection error - check your network connection and MongoDB Atlas whitelist');
-          } else if (error.code === 'MONGODB_AUTH_ERROR') {
+          } else if (err?.code === 'MONGODB_AUTH_ERROR') {
             console.error('Authentication failed - check your username and password');
           }
           console.log('Trying next connection string...');
@@ -131,19 +133,19 @@ export class MongoStorage implements IStorage {
     return {
       id: saved._id.toString(),
       location: saved.location,
-      latitude: saved.latitude ?? null,
-      longitude: saved.longitude ?? null,
+      latitude: saved.latitude ?? undefined,
+      longitude: saved.longitude ?? undefined,
       temperature: saved.temperature,
-      feelsLike: saved.feelsLike ?? null,
-      humidity: saved.humidity ?? null,
-      windSpeed: saved.windSpeed ?? null,
-      visibility: saved.visibility ?? null,
+      feelsLike: saved.feelsLike ?? undefined,
+      humidity: saved.humidity ?? undefined,
+      windSpeed: saved.windSpeed ?? undefined,
+      visibility: saved.visibility ?? undefined,
       description: saved.description,
       condition: saved.condition,
       forecast: saved.forecast,
       searchDate: saved.searchDate,
-      startDate: saved.startDate ?? null,
-      endDate: saved.endDate ?? null,
+      startDate: saved.startDate ?? undefined,
+      endDate: saved.endDate ?? undefined,
     };
   }
 
@@ -153,19 +155,19 @@ export class MongoStorage implements IStorage {
     return records.map(record => ({
       id: record._id.toString(),
       location: record.location,
-      latitude: record.latitude ?? null,
-      longitude: record.longitude ?? null,
+      latitude: (record as any).latitude ?? undefined,
+      longitude: (record as any).longitude ?? undefined,
       temperature: record.temperature,
-      feelsLike: record.feelsLike ?? null,
-      humidity: record.humidity ?? null,
-      windSpeed: record.windSpeed ?? null,
-      visibility: record.visibility ?? null,
+      feelsLike: (record as any).feelsLike ?? undefined,
+      humidity: (record as any).humidity ?? undefined,
+      windSpeed: (record as any).windSpeed ?? undefined,
+      visibility: (record as any).visibility ?? undefined,
       description: record.description,
       condition: record.condition,
-      forecast: record.forecast,
-      searchDate: record.searchDate,
-      startDate: record.startDate ?? null,
-      endDate: record.endDate ?? null,
+      forecast: (record as any).forecast,
+      searchDate: (record as any).searchDate,
+      startDate: (record as any).startDate ?? undefined,
+      endDate: (record as any).endDate ?? undefined,
     }));
   }
 
@@ -177,19 +179,19 @@ export class MongoStorage implements IStorage {
     return {
       id: record._id.toString(),
       location: record.location,
-      latitude: record.latitude ?? null,
-      longitude: record.longitude ?? null,
+      latitude: record.latitude ?? undefined,
+      longitude: record.longitude ?? undefined,
       temperature: record.temperature,
-      feelsLike: record.feelsLike ?? null,
-      humidity: record.humidity ?? null,
-      windSpeed: record.windSpeed ?? null,
-      visibility: record.visibility ?? null,
+      feelsLike: record.feelsLike ?? undefined,
+      humidity: record.humidity ?? undefined,
+      windSpeed: record.windSpeed ?? undefined,
+      visibility: record.visibility ?? undefined,
       description: record.description,
       condition: record.condition,
       forecast: record.forecast,
       searchDate: record.searchDate,
-      startDate: record.startDate ?? null,
-      endDate: record.endDate ?? null,
+      startDate: record.startDate ?? undefined,
+      endDate: record.endDate ?? undefined,
     };
   }
 
@@ -201,19 +203,19 @@ export class MongoStorage implements IStorage {
     return {
       id: updated._id.toString(),
       location: updated.location,
-      latitude: updated.latitude ?? null,
-      longitude: updated.longitude ?? null,
+      latitude: updated.latitude ?? undefined,
+      longitude: updated.longitude ?? undefined,
       temperature: updated.temperature,
-      feelsLike: updated.feelsLike ?? null,
-      humidity: updated.humidity ?? null,
-      windSpeed: updated.windSpeed ?? null,
-      visibility: updated.visibility ?? null,
+      feelsLike: updated.feelsLike ?? undefined,
+      humidity: updated.humidity ?? undefined,
+      windSpeed: updated.windSpeed ?? undefined,
+      visibility: updated.visibility ?? undefined,
       description: updated.description,
       condition: updated.condition,
       forecast: updated.forecast,
       searchDate: updated.searchDate,
-      startDate: updated.startDate ?? null,
-      endDate: updated.endDate ?? null,
+      startDate: updated.startDate ?? undefined,
+      endDate: updated.endDate ?? undefined,
     };
   }
 
@@ -256,15 +258,15 @@ export class MemStorage implements IStorage {
       ...record,
       id,
       searchDate: new Date(),
-      latitude: record.latitude ?? null,
-      longitude: record.longitude ?? null,
-      feelsLike: record.feelsLike ?? null,
-      humidity: record.humidity ?? null,
-      windSpeed: record.windSpeed ?? null,
-      visibility: record.visibility ?? null,
-      forecast: record.forecast ?? null,
-      startDate: record.startDate ?? null,
-      endDate: record.endDate ?? null,
+      latitude: record.latitude ?? undefined,
+      longitude: record.longitude ?? undefined,
+      feelsLike: record.feelsLike ?? undefined,
+      humidity: record.humidity ?? undefined,
+      windSpeed: record.windSpeed ?? undefined,
+      visibility: record.visibility ?? undefined,
+      forecast: record.forecast ?? undefined,
+      startDate: record.startDate ?? undefined,
+      endDate: record.endDate ?? undefined,
     };
     this.weatherRecords.set(id, weatherRecord);
     return weatherRecord;

@@ -11,7 +11,7 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
+    "noEmit": false,
     "outDir": "./dist",
     "rootDir": "./",
     "baseUrl": ".",
@@ -20,6 +20,6 @@
       "@shared/*": ["../shared/*"]
     }
   },
-  "include": ["./**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules", "dist", "./index-simple.ts"]
 }

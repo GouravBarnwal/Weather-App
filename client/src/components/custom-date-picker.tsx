@@ -57,7 +57,7 @@ export function CustomDatePicker({
         popperClassName="react-datepicker-popper z-[9999]"
         wrapperClassName="w-full"
         calendarClassName="!border-2 !border-gray-200 dark:!border-gray-700 rounded-lg shadow-xl overflow-hidden"
-        dayClassName={(date) => 
+        dayClassName={() => 
           cn(
             'hover:bg-gray-100 dark:hover:bg-gray-700',
             'transition-colors duration-200 rounded-md',

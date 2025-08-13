@@ -1,12 +1,23 @@
 import express, { type Express } from "express";
 import fs from "fs";
 import path from "path";
-import { createServer as createViteServer, createLogger } from "vite";
 import { type Server } from "http";
 // Remove the vite config import and use a simpler setup
 import { nanoid } from "nanoid";
 
-const viteLogger = createLogger();
+// Minimal logger stub
+const viteLogger = {
+  hasErrorLogged: () => false,
+  hasWarned: false,
+  info: (msg: unknown) => console.log(msg),
+  warn: (msg: unknown) => console.warn(msg),
+  warnOnce: (msg: unknown) => console.warn(msg),
+  error: (msg: unknown) => console.error(msg),
+  clearScreen: undefined as unknown,
+  clearScreenBuffer: undefined as unknown,
+  get isTTY() { return (process.stdout as any).isTTY ?? false },
+  level: 'info'
+} as any;
 
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
@@ -26,19 +37,22 @@ export async function setupVite(app: Express, server: Server) {
     allowedHosts: true as const,
   };
 
-  const vite = await createViteServer({
+  const viteConfig = {
     configFile: false,
     root: path.resolve(import.meta.dirname, "..", "client"),
     customLogger: {
       ...viteLogger,
-      error: (msg, options) => {
-        viteLogger.error(msg, options);
+      error: (msg: any, _options?: any) => {
+        viteLogger.error(String(msg));
         process.exit(1);
       },
     },
     server: serverOptions,
     appType: "custom",
-  });
+  };
+
+  const viteModule: any = await import("vite");
+  const vite = await viteModule.createServer(viteConfig as any);
 
   app.use(vite.middlewares);
   app.use("*", async (req, res, next) => {
@@ -68,11 +82,17 @@ export async function setupVite(app: Express, server: Server) {
 }
 
 export function serveStatic(app: Express) {
-  const distPath = path.resolve(import.meta.dirname, "public");
+  // Support running from TS (server/) or compiled JS (server/dist)
+  const candidatePaths = [
+    path.resolve(import.meta.dirname, "..", "client", "dist"),
+    path.resolve(import.meta.dirname, "..", "..", "client", "dist"),
+  ];
 
-  if (!fs.existsSync(distPath)) {
+  const distPath = candidatePaths.find((p) => fs.existsSync(p));
+
+  if (!distPath) {
     throw new Error(
-      `Could not find the build directory: ${distPath}, make sure to build the client first`,
+      `Could not find the client build in any of: ${candidatePaths.join(", ")}. Run \`npm run build\` in the project root first.`,
     );
   }
 

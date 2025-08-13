@@ -127,8 +127,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const weatherData = await fetchWeatherData(location);
       
-      // Store in database
-      const record = await storage.createWeatherRecord(weatherData);
+      // Store in database (ensure required searchDate is included)
+      const record = await storage.createWeatherRecord({
+        ...weatherData,
+        searchDate: new Date(),
+      });
       
       res.json({ weather: weatherData, record });
     } catch (error) {
