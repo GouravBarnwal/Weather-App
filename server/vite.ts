@@ -39,7 +39,7 @@ export async function setupVite(app: Express, server: Server) {
 
   const viteConfig = {
     configFile: false,
-    root: path.resolve(import.meta.dirname, "..", "client"),
+    root: path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "client"),
     customLogger: {
       ...viteLogger,
       error: (msg: any, _options?: any) => {
@@ -83,9 +83,10 @@ export async function setupVite(app: Express, server: Server) {
 
 export function serveStatic(app: Express) {
   // Support running from TS (server/) or compiled JS (server/dist)
+  const here = path.dirname(new URL(import.meta.url).pathname);
   const candidatePaths = [
-    path.resolve(import.meta.dirname, "..", "client", "dist"),
-    path.resolve(import.meta.dirname, "..", "..", "client", "dist"),
+    path.resolve(here, "..", "client", "dist"),
+    path.resolve(here, "..", "..", "client", "dist"),
   ];
 
   const distPath = candidatePaths.find((p) => fs.existsSync(p));

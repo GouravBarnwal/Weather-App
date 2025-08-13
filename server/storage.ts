@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type WeatherRecord, type InsertWeatherRecord, type UpdateWeatherRecord } from "./schema";
+import { type User, type InsertUser, type WeatherRecord, type InsertWeatherRecord, type UpdateWeatherRecord } from "./schema.js";
 import { randomUUID } from "crypto";
 import mongoose from "mongoose";
 
